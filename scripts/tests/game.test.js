@@ -2,7 +2,10 @@
  * @jest-environment jsdom
  */
 
-const { game } = require("../game");
+//And that's a good reminder that  every time you add a new function,  
+//you need to export it from game.js  and import it to game.test.js.
+
+const { game, newGame, showScore, addTurn } = require("../game");
 
 
 beforeAll(() => {
@@ -31,3 +34,27 @@ describe("game object contains correct keys", () => {
     });
 });
 
+// use another beforeAll  function, because we want to set  
+//up the game state with some fake values to see if the newGame() resets them.
+
+describe("NewGame works correctly", () => {
+    beforeAll(() => {
+        game.score = 42;
+        game.playerMoves = ["button1", "button2"];
+        game.currentGame = ["button1", "button2"];
+        document.getElementById("score").innerText = "42";
+        newGame();
+    });
+    test("should set game score to zero", () => {
+       expect(game.score).toEqual(0);
+    });
+    test("should clear the PlayerMoves array", () => {
+        expect(game.playerMoves.length).toBe(0);
+    });
+    test("should be one move in the computer's game array", () => {
+        expect(game.currentGame.length).toBe(1);
+    });
+    test("should display 0 for the element with id of score", () => {
+        expect(document.getElementById("score").innerText).toEqual(0);
+    });
+})
