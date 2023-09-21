@@ -26,8 +26,15 @@ function showScore () {
     document.getElementById("score").innerText = game.score;  
 };
 
+function lightsOn(circ) {
+    document.getElementById(circ).classList.add(circ + "light");
+    setTimeout(function () {
+        document.getElementById(circ).classList.remove(circ + "light");
+    }, 400);
+}
 
-module.exports = { game, newGame, showScore, addTurn };
+
+module.exports = { game, newGame, showScore, addTurn, lightsOn };
 
 
 // addTurn()
@@ -38,9 +45,12 @@ module.exports = { game, newGame, showScore, addTurn };
 
 
 //newGame()
-//Schould:
+//Should:
 //-Reset the score to zero
 //-Clear the PlayerMoves array
 //-Clear the currentGame array
 //-Call showScore() function (Now the showScore() will reset the score to zero on the DOM  )
 //-Call addTurn() function (addTurn()will add a turn to our currently empty sequence.)
+
+
+// The showTurn() and player clicks should cause the circle to change colour or to light up. 
