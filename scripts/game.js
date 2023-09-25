@@ -19,7 +19,7 @@ function newGame() {
 function addTurn() {
     game.playerMoves = [];
     game.currentGame.push(game.choices[(Math.floor(Math.random() * 4))]);
-
+    showTurns();
 };
 
 function showScore () {
@@ -33,8 +33,19 @@ function lightsOn(circ) {
     }, 400);
 }
 
+function showTurns() {
+    game.turnNumber = 0;
+    let turns = setInterval(function () {
+        lightsOn(game.currentGame[game.turnNumber]);
+        game.turnNumber++;
+        if (game.turnNumber >= game.currentGame.length) {
+            clearInterval(turns);
+        }
+    }, 800);
+}
 
-module.exports = { game, newGame, showScore, addTurn, lightsOn };
+
+module.exports = { game, newGame, showScore, addTurn, lightsOn, showTurns };
 
 
 // addTurn()
@@ -53,4 +64,4 @@ module.exports = { game, newGame, showScore, addTurn, lightsOn };
 //-Call addTurn() function (addTurn()will add a turn to our currently empty sequence.)
 
 
-// The showTurn() and player clicks should cause the circle to change colour or to light up. 
+// The showTurns() and player clicks should cause the circle to change colour or to light up. 
