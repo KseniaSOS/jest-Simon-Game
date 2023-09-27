@@ -58,8 +58,21 @@ function showTurns() {
     }, 800);
 }
 
+function playerTurn() {
+    let i = game.playerMoves.length -1;
+    if (game.currentGame[i] === game.playerMoves[i]) {
+        if (game.currentGame.length == game.playerMoves.length) {
+            game.score++;
+            showScore();
+            addTurn();
+        }       
+    } else {
+        alert("Wrong move!");
+        newGame();
+    }
+}
 
-module.exports = { game, newGame, showScore, addTurn, lightsOn, showTurns };
+module.exports = { game, newGame, showScore, addTurn, lightsOn, showTurns, playerTurn };
 
 
 // addTurn()
@@ -79,3 +92,10 @@ module.exports = { game, newGame, showScore, addTurn, lightsOn, showTurns };
 
 
 // The showTurns() and player clicks should cause the circle to change colour or to light up. 
+
+//playerTurn()
+// Should:
+//check if the player's move matches the move in the computer sequence. And if so, then we want to keep running through the computer  
+//sequence and checking that with the player's turn. If we've got to the end of the computer sequence,
+//then we want to add another turn, increment the score, and start the whole thing again.  
+//If the move is wrong, we'll need to  display an alert to warn the user.

@@ -5,8 +5,12 @@
 //And that's a good reminder that  every time you add a new function,  
 //you need to export it from game.js  and import it to game.test.js.
 
-const { game, newGame, showScore, addTurn, lightsOn, showTurns } = require("../game");
+const { game, newGame, showScore, addTurn, lightsOn, showTurns, playerTurn } = require("../game");
 
+//we said we wanted to display an alert and  now this is where things get interesting, because we can actually use Jest to  check if an alert has been called.
+//To do this, we use something called a spy. 
+
+jest.spyOn(window,"alert").mockImplementation(() => {});
 
 beforeAll(() => {
     let fs = require("fs");
@@ -97,5 +101,15 @@ describe("gameplay works correctly", () => {
         game.turnNumber = 42;
         showTurns();
         expect(game.turnNumber).toBe(0);
+    });
+    test("should increment the score if the move(turn) is correct", () => {
+        game.playerMoves.push(game.currentGame[0]);
+        playerTurn();
+        expect(game.score).toBe(1);
+    });  
+    test("should call an alert if the move is wrong", () => {
+        game.playerMoves.push("wrong");
+        playerTurn();
+        expect(window.alert).toBeCalledWith("Wrong move!");
     });
 });
