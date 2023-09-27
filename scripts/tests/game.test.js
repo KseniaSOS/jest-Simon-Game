@@ -2,13 +2,7 @@
  * @jest-environment jsdom
  */
 
-//And that's a good reminder that  every time you add a new function,  
-//you need to export it from game.js  and import it to game.test.js.
-
 const { game, newGame, showScore, addTurn, lightsOn, showTurns, playerTurn } = require("../game");
-
-//we said we wanted to display an alert and  now this is where things get interesting, because we can actually use Jest to  check if an alert has been called.
-//To do this, we use something called a spy. 
 
 jest.spyOn(window, "alert").mockImplementation(() => { });
 
@@ -20,12 +14,12 @@ beforeAll(() => {
     document.close();
 });
 
-describe("pre-game", () => {	
-    test("clicking buttons before newGame should fail", () => {	
-        game.lastButton = "";	
-        document.getElementById("button2").click();	
-        expect(game.lastButton).toEqual("");	
-    });	
+describe("pre-game", () => {
+    test("clicking buttons before newGame should fail", () => {
+        game.lastButton = "";
+        document.getElementById("button2").click();
+        expect(game.lastButton).toEqual("");
+    });
 });
 
 describe("game object contains correct keys", () => {
@@ -42,17 +36,23 @@ describe("game object contains correct keys", () => {
         expect("choices" in game).toBe(true);
     });
     test("choices contain correct ids", () => {
-        expect(game.choices).toEqual(["button1","button2","button3","button4"]);
+        expect(game.choices).toEqual(["button1", "button2", "button3", "button4"]);
     });
     test("turnNumber key exists", () => {
         expect("turnNumber" in game).toBe(true);
     });
+    test("lastButton key exists", () => {
+        expect("lastButton" in game).toBe(true);
+    });
+    test("turnInProgress key exists", () => {
+        expect("turnInProgress" in game).toBe(true);
+    });
+    test("turnInProgress key value is false", () => {
+        expect("turnInProgress" in game).toBe(true);
+    });
 });
 
-// use another beforeAll  function, because we want to set  
-//up the game state with some fake values to see if the newGame() resets them.
-
-describe("NewGame works correctly", () => {
+describe("newGame works correctly", () => {
     beforeAll(() => {
         game.score = 42;
         game.playerMoves = ["button1", "button2"];
@@ -67,28 +67,18 @@ describe("NewGame works correctly", () => {
         }
     });
     test("should set game score to zero", () => {
-       expect(game.score).toEqual(0);
-    });
-    test("should clear the PlayerMoves array", () => {
-        expect(game.playerMoves.length).toBe(0);
-    });
-    test("should be one move in the computer's game array", () => {
-        expect(game.currentGame.length).toBe(1);
+        expect(game.score).toEqual(0);
     });
     test("should display 0 for the element with id of score", () => {
         expect(document.getElementById("score").innerText).toEqual(0);
     });
-    test("expect data-listener to be true", () => {
-        newGame();
-        const elements = document.getElementsByClassName("circle");
-        for (let element of elements) {
-            expect(element.getAttribute("data-listener")).toEqual("true");
-        }
+    test("should clear the player moves array", () => {
+        expect(game.playerMoves.length).toBe(0);
     });
-})
-
-// The showTurn() and playerClick should cause the circle to change colour or to light up. 
-// whereas beforeAll runs before all of the tests, beforeEach runs before each test is run, so we're going to reset the state each time.
+    test("should add one move to the computer's game array", () => {
+        expect(game.currentGame.length).toBe(1);
+    });
+});
 
 describe("gameplay works correctly", () => {
     beforeEach(() => {

@@ -3,6 +3,8 @@ let game = {
     playerMoves: [],
     score: 0,
     turnNumber: 0,
+    lastButton: "",
+    turnInProgress: false,
     choices: ["button1", "button2", "button3", "button4"]
 };
 
@@ -14,10 +16,13 @@ function newGame() {
     for (let circle of document.getElementsByClassName("circle")) {
         if (circle.getAttribute("data-listener") !== "true") {
             circle.addEventListener("click", (e) => {
-                let move = e.target.getAttribute("id");
-                game.playerMoves.push(move);
-                lightsOn(move);
-                playerTurn();
+                if (game.currentGame.length > 0 && !game.turnInProgress) {
+                    let move = e.target.getAttribute("id");
+                    game.lastButton = move;
+                    game.playerMoves.push(move);
+                    lightsOn(move);
+                    playerTurn();
+                }
             });
             circle.setAttribute("data-listener", "true");
         }
@@ -25,9 +30,6 @@ function newGame() {
     showScore();
     addTurn();
 }
-// - push onto the computer game sequence, we're going to go to our game.choices key, which of course contains our four values,
-// the IDs of our buttons. And then we're going to use the math.random library to generate a random number between zero and three.
-// We're going to use that as the index of our choices array and then the resulting choice is pushed onto the current game array.
 
 function addTurn() {
     game.playerMoves = [];
@@ -36,12 +38,14 @@ function addTurn() {
 }
 
 function showTurns() {
+    game.turnInProgress = true;
     game.turnNumber = 0;
     let turns = setInterval(function () {
         lightsOn(game.currentGame[game.turnNumber]);
         game.turnNumber++;
         if (game.turnNumber >= game.currentGame.length) {
             clearInterval(turns);
+            game.turnInProgress = false;
         }
     }, 800);
 }
@@ -72,29 +76,3 @@ function showScore() {
 }
 
 module.exports = { game, newGame, showScore, addTurn, lightsOn, showTurns, playerTurn };
-
-
-// addTurn()
-// Should:
-// - clear the playerMoves Array
-// - randomly add a button ID to the currentGame aaray
-// - call showTurns() function
-
-
-//newGame()
-//Should:
-//-Reset the score to zero
-//-Clear the PlayerMoves array
-//-Clear the currentGame array
-//-Call showScore() function (Now the showScore() will reset the score to zero on the DOM  )
-//-Call addTurn() function (addTurn()will add a turn to our currently empty sequence.)
-
-
-// The showTurns() and player clicks should cause the circle to change colour or to light up. 
-
-//playerTurn()
-// Should:
-//check if the player's move matches the move in the computer sequence. And if so, then we want to keep running through the computer  
-//sequence and checking that with the player's turn. If we've got to the end of the computer sequence,
-//then we want to add another turn, increment the score, and start the whole thing again.  
-//If the move is wrong, we'll need to  display an alert to warn the user.
