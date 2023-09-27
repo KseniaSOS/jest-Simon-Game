@@ -1,31 +1,30 @@
 let game = {
     currentGame: [],
     playerMoves: [],
+    score: 0,
     turnNumber: 0,
-    choices: ["button1","button2","button3","button4"],
-    score: 0
+    choices: ["button1", "button2", "button3", "button4"]
 };
 
 function newGame() {
-    game.score = 0;
-    game.playerMoves = [];
     game.currentGame = [];
+    game.playerMoves = [];
+    game.score = 0;
 
     for (let circle of document.getElementsByClassName("circle")) {
         if (circle.getAttribute("data-listener") !== "true") {
             circle.addEventListener("click", (e) => {
                 let move = e.target.getAttribute("id");
-                lightsOn(move);
                 game.playerMoves.push(move);
+                lightsOn(move);
                 playerTurn();
             });
             circle.setAttribute("data-listener", "true");
         }
     }
-
     showScore();
     addTurn();
-};
+}
 // - push onto the computer game sequence, we're going to go to our game.choices key, which of course contains our four values,
 // the IDs of our buttons. And then we're going to use the math.random library to generate a random number between zero and three.
 // We're going to use that as the index of our choices array and then the resulting choice is pushed onto the current game array.
@@ -34,17 +33,6 @@ function addTurn() {
     game.playerMoves = [];
     game.currentGame.push(game.choices[(Math.floor(Math.random() * 4))]);
     showTurns();
-};
-
-function showScore () {
-    document.getElementById("score").innerText = game.score;  
-};
-
-function lightsOn(circ) {
-    document.getElementById(circ).classList.add(circ + "light");
-    setTimeout(function () {
-        document.getElementById(circ).classList.remove(circ + "light");
-    }, 400);
 }
 
 function showTurns() {
@@ -58,18 +46,29 @@ function showTurns() {
     }, 800);
 }
 
+function lightsOn(circ) {
+    document.getElementById(circ).classList.add("light");
+    setTimeout(function () {
+        document.getElementById(circ).classList.remove("light");
+    }, 400);
+}
+
 function playerTurn() {
-    let i = game.playerMoves.length -1;
+    let i = game.playerMoves.length - 1;
     if (game.currentGame[i] === game.playerMoves[i]) {
-        if (game.currentGame.length == game.playerMoves.length) {
+        if (game.currentGame.length === game.playerMoves.length) {
             game.score++;
             showScore();
             addTurn();
-        }       
+        }
     } else {
         alert("Wrong move!");
         newGame();
     }
+}
+
+function showScore() {
+    document.getElementById("score").innerText = game.score;
 }
 
 module.exports = { game, newGame, showScore, addTurn, lightsOn, showTurns, playerTurn };
